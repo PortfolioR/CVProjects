@@ -28,7 +28,9 @@ int arUpper = 8;
 int sLower = 9;
 int sUpper = 9;
 
-String[] animalSoundNames = {"sh.mp3", "sh.mp3", "oo.mp3", "oo.mp3", "m.mp3", "or.mp3", "ee.mp3", "ee.mp3" , "ar.mp3",  "s.mp3"};
+String[] LingsAvailable = {"fish", "shh", "ghost", "train", "icecream", "lion", "monkey", "mouse", "car",  "snake"};
+String[] allLingPictureNames = {"fish.jpeg" , "shh.png", "ghost.png", "train.jpeg", "icecream.jpeg", "lion.jpeg", "monkey.jpeg", "mouse.jpeg", "car.jpeg",  "snake.jpeg" };
+String[] LingSoundNames = {"sh.mp3", "sh.mp3", "oo.mp3", "oo.mp3", "m.mp3", "or.mp3", "ee.mp3", "ee.mp3" , "ar.mp3",  "s.mp3"};
 int[] xVal = {  730, 420, 575};
 int[] yVal = { 50,  50, 250};
 
