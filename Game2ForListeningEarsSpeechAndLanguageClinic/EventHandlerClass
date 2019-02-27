@@ -1,0 +1,434 @@
+PImage startscreen;
+int stage;
+
+import java.util.Collections;
+import processing.sound.*;
+int indexForPicture0;
+
+int indexForPicture1;
+int indexForRectangle1;
+int indexForPicture2;
+int indexForRectangle2;
+int indexForPicture3;
+int indexForRectangle3;
+SoundFile LingSound;
+
+int shLower = 0;
+int shUpper = 1;
+int ooLower = 2;
+int ooUpper = 3;
+int mLower = 4;
+int mUpper = 4;
+int orLower = 5;
+int orUpper = 5;
+int eeLower = 6;
+int eeUpper = 7;
+int arLower = 8;
+int arUpper = 8;
+int sLower = 9;
+int sUpper = 9;
+
+String[] animalSoundNames = {"sh.mp3", "sh.mp3", "oo.mp3", "oo.mp3", "m.mp3", "or.mp3", "ee.mp3", "ee.mp3" , "ar.mp3",  "s.mp3"};
+int[] xVal = {  730, 420, 575};
+int[] yVal = { 50,  50, 250};
+
+//String[] allLingPictureNames = {"dog.jpg" , "pig.jpg", "cow.jpg"};
+int[] threeNumbersChosen;
+String[] oneSetOfLingPictureNames;
+int XofCorrectArray;
+int YofCorrectArray;
+
+boolean SecondHalfOfGame = false;
+boolean PlaySoundFile = true;
+boolean moveBox = false;
+boolean refreshSystem = false;
+boolean displayWellDoneImage = false;
+boolean startRefresh = false;
+boolean getRandomIntegersAgain = false;
+
+int LingThatHasBeenCHosen; 
+
+PImage backgroundImage;
+
+PImage boxImage;
+
+PImage wellDone;
+PImage[] wellDoneArray = new PImage[25];
+
+Box box; 
+
+int XValueOfChosenLing;
+int YValueOfChosenLing;
+
+int arrayIndexToAddChosenLing;
+
+int YOfWellDoneImage = 1500;
+
+void setup() {
+  size(1576, 1095);
+  
+  getThreeRandomIndexes();
+  //System.out.print(LingThatHasBeenCHosen);
+  stage  = 1;
+  startscreen = loadImage("startscreen.jpeg");
+  image(startscreen, 0, 0, 641*2.3, 347*2.3);
+  
+  box = new Box();
+ 
+}
+
+
+
+void draw() {
+  
+  
+  if(stage == 1)
+  {
+    if(mousePressed)
+    {
+      stage = 2;
+    
+    }
+    
+  
+  }
+  
+  else if(stage == 2)
+  {
+    background(95,158,160);
+
+  backgroundImage = loadImage("background2.jpeg");
+  backgroundImage.resize(570*2,443*2);
+  image(backgroundImage, 140, 0);
+
+if(refreshSystem == true)
+{
+SecondHalfOfGame = false;
+PlaySoundFile = true;
+moveBox = false;
+refreshSystem = false;
+displayWellDoneImage = false;
+startRefresh = false;
+YOfWellDoneImage = 1500;
+
+  box.bringboxBack();
+  
+  if(getRandomIntegersAgain == true)
+  {
+  getThreeRandomIndexes();
+  getRandomIntegersAgain = false;
+  //System.out.print(getRandomIntegersAgain);
+  }
+
+}
+
+ box.displaybox();
+    
+ displayTheThreePictures();
+ 
+ playSoundAndShakeBox();
+ 
+ checkIfCorrect();
+ 
+ removeBoxFromScreen();
+ 
+ DisplayWellDoneImageAndRefresh();
+ 
+ RefreshGame();
+  
+}
+
+}
+
+void displayImage(int iForPicture, int iForRectangle)
+  {
+    //rect(xVal[LingThatHasBeenCHosen]-10, yVal[LingThatHasBeenCHosen]-10, 283, 177);
+    //rect(xVal[iForRectangle]-10, yVal[iForRectangle]-10, 300-25, 200-25);
+    //System.out.println();
+    //System.out.println(xVal[LingThatHasBeenCHosen]);
+    //System.out.println();
+    //System.out.println(yVal[LingThatHasBeenCHosen]);]
+    //rect(XValueOfChosenLing-20, YValueOfChosenLing-20, 283, 177);
+    LingImage = loadImage(allLingPictureNames[iForPicture]);
+    image(LingImage, xVal[iForRectangle], yVal[iForRectangle]);
+    
+    
+
+  
+  }
+ 
+  
+  ArrayList <Integer> generate3RandomIntegers() // make work
+{
+  int number1;
+  int number2;
+  int number3;
+
+  ArrayList <Integer> list=new ArrayList<Integer>();
+  
+  while (true)
+  {
+    number1 =  (int) (Math.random() * ( 9 - 0 )) + 0;
+    //print(number1);
+    //print('\n');
+    list.add(number1);
+    break;
+    
+  
+  
+  }
+  
+  while (true)
+  {
+    number2 =  (int) (Math.random() * ( 9 - 0 )) + 0;
+    //print(number2);
+    
+    int group1 = getGroup(number1);
+    int group2 = getGroup(number2);
+    
+    //System.out.println((group2));
+
+    //System.out.println(group1);
+    
+    if(!list.contains(number2) && (group1 != group2))
+    {
+      list.add(number2);
+      break;
+    
+    }
+  
+  } 
+  
+  while (true)
+  {
+    number3 =  (int) (Math.random() * ( 9 - 0 )) + 0;
+    //print(number3);
+    int group1 = getGroup(number1);
+    int group2 = getGroup(number2);
+    int group3 = getGroup(number3);
+    if(!list.contains(number3) && (group3 != group2) && (group3 != group1))
+    {
+      list.add(number3);
+      break;
+    
+    }
+  
+  }
+  
+  //list.add(arrayIndexToAddChosenLing, number3);
+  
+  for(int i = 0; i< list.size(); i++)
+  {
+    //System.out.print(list.get(i));
+  
+  }
+  //System.out.println("");
+  
+  arrayIndexToAddChosenLing = (int) (Math.random() * ( 3 - 0 )) + 0;
+  //System.out.print(arrayIndexToAddChosenLing);
+  //System.out.println("");
+  LingThatHasBeenCHosen = list.get(arrayIndexToAddChosenLing); // do not put int before this
+          //System.out.println(LingThatHasBeenCHosen);
+
+  
+  //System.out.print(LingThatHasBeenCHosen);
+  //System.out.println("");
+
+  
+  return list;
+  
+ 
+}
+
+
+void getThreeRandomIndexes()
+{
+    ArrayList<Integer> randomNumbers=new ArrayList<Integer>();
+  randomNumbers = generate3RandomIntegers();
+
+    indexForPicture0 = randomNumbers.get(0);
+    indexForPicture1 = randomNumbers.get(1);
+    indexForPicture2 = randomNumbers.get(2);
+    if(arrayIndexToAddChosenLing == 0)
+    {
+      XValueOfChosenLing = xVal[(0)];
+  YValueOfChosenLing = yVal[0];
+    
+    }
+    
+    if(arrayIndexToAddChosenLing == 1)
+    {
+    XValueOfChosenLing = xVal[1];
+  YValueOfChosenLing = yVal[1];
+    }
+    
+    if(arrayIndexToAddChosenLing == 2)
+    {
+    XValueOfChosenLing = xVal[2];
+  YValueOfChosenLing = yVal[2];
+    }
+
+  //System.out.print(XValueOfChosenLing);
+  //System.out.println("");
+  //System.out.print(YValueOfChosenLing);
+  
+}
+
+void displayTheThreePictures()
+{
+    displayImage(indexForPicture0, 0);
+  
+  
+  displayImage(indexForPicture1, 1);
+  
+  
+  displayImage(indexForPicture2, 2);
+  
+  //System.out.print(indexForPicture1);
+  //System.out.println("");
+  //System.out.print(indexForPicture2);
+  //System.out.println("");
+  //System.out.print(indexForPicture3);
+  //System.out.println("");
+
+}
+
+void playSoundAndShakeBox()
+{
+  
+  if(PlaySoundFile == true)
+  {
+    //System.out.print(LingThatHasBeenCHosen);
+    System.out.print(animalSoundNames[LingThatHasBeenCHosen]);
+    LingSound = new SoundFile(this, animalSoundNames[LingThatHasBeenCHosen]);
+    System.out.print(LingThatHasBeenCHosen);
+    //System.out.print(animalSoundNames[LingThatHasBeenCHosen]);
+    LingSound.play();
+    PlaySoundFile = false;
+
+    box.boxShake();
+
+  }
+}
+
+void checkIfCorrect()
+{
+  //System.out.print("1");
+  if(mousePressed)
+  {
+    if(mouseX>XValueOfChosenLing && mouseY>YValueOfChosenLing && mouseX<(XValueOfChosenLing+283) && mouseY<YValueOfChosenLing+177)
+    {
+      
+      //rect(xVal[iForRectangle]-10, yVal[iForRectangle]-10, 300-25, 200-25);
+      //rect(xVal[iForRectangle]-10, yVal[iForRectangle]-10, 300-25, 200-25);
+      
+      //System.out.println(xVal[LingThatHasBeenCHosen]);
+      //System.out.println(yVal[LingThatHasBeenCHosen]);
+
+      //System.out.print("correct");
+      moveBox = true;
+      removeBoxFromScreen();
+      //System.out.print(box.boxMove());
+      //System.out.print(displayWellDoneImage);
+      
+    }
+    
+  }
+  
+}
+
+void DisplayWellDoneImageAndRefresh()
+{
+      if(displayWellDoneImage == true)
+      {
+       
+      YOfWellDoneImage = 500-100;
+      wellDone = loadImage("welldone.png");
+      delay(100);
+      image(wellDone, 500-100, YOfWellDoneImage);      
+      startRefresh = true;
+      displayWellDoneImage = false;
+      
+      //System.out.print(startRefresh);
+  
+      }
+}
+
+void RefreshGame()
+{
+  if (startRefresh == true)
+      {
+        //System.out.print(startRefresh);
+        //System.out.print("started");
+        refreshSystem = true;
+        getRandomIntegersAgain = true;
+      }
+}
+
+void removeBoxFromScreen()
+{
+  
+  if(moveBox == true)
+  {
+    
+      if(box.boxMove() == 0)
+      {
+      displayWellDoneImage = false;
+      }
+      
+      else 
+      {
+        displayWellDoneImage = true; 
+      }
+
+  }
+
+}
+
+int getGroup(int index)
+{
+  if (index >= shLower && index <= shUpper)
+  {
+    return 1; //means sh
+  
+  }
+  else if (index >= ooLower && index <= ooUpper)
+  {
+    return 2; //means sh
+  
+  }
+  else if (index >= mLower && index <= mUpper)
+  {
+    return 3; //means sh
+  
+  }
+  else if (index >= orLower && index <= orUpper)
+  {
+    return 4; //means sh
+  
+  }
+  else if (index >= eeLower && index <= eeUpper)
+  {
+    return 5; //means sh
+  
+  }
+  else if (index >= arLower && index <= arUpper)
+  {
+    return 6; //means sh
+  
+  }
+  else if (index >= sLower && index <= sUpper)
+  {
+    return 7; //means sh
+  
+  }
+  
+  else
+  {
+    return -1;
+  
+  }
+  
+  
+
+}
