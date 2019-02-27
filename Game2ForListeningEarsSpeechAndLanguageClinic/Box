@@ -1,0 +1,69 @@
+class Box
+{
+  float x;
+  float ybox; 
+  PImage boxImage;
+  PImage animalImage;
+  
+  Box() 
+  {
+    ybox = 500; 
+    x = 500;
+  }
+  
+  void displaybox()
+  {
+    animalImage = loadImage(allLingPictureNames[LingThatHasBeenCHosen]);
+    animalImage.resize(200, 125);
+    image(animalImage, 500+110, 500+90);
+    
+    boxImage = loadImage("pouch.png");
+    boxImage.resize(512, 246);
+    image(boxImage, x, ybox);
+    
+    
+    
+    
+  }
+  
+  void boxShake()
+  {
+  
+   
+    if(x != 450+30)
+    {
+    x = x - 20;
+    }
+    
+    else if(x != 455+30) // no need to use while as in body it loops anyway
+    {
+      x = x + 20;
+    
+    }
+    
+
+  } 
+  
+  int boxMove() // both if and else must have a return statement
+  {
+    if(ybox != 700)
+    {
+      //System.out.print(ybox);
+      ybox = ybox+10;
+      return (0);
+    }
+    else
+    {
+    return (1);
+    }
+    
+  }
+  
+  void bringboxBack()
+  {
+    
+    x = 500;
+    ybox = 500;
+  
+  }
+}
