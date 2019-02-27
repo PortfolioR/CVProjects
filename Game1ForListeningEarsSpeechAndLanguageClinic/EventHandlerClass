@@ -1,0 +1,311 @@
+//THE FIRST GAME FOR FOR LISTENING EARS SPEECH AND LANGUAGE CLINIC
+//this is the class that brings together objects from the other classes and manages the various events of the game and 
+responses of the game to user input
+
+import java.util.Collections;
+import processing.sound.*;
+
+PImage startscreen;
+int stage;
+
+int indexForPicture0; 
+int indexForPicture1;
+int indexForRectangle1;
+int indexForPicture2;
+int indexForRectangle2;
+int indexForPicture3;
+int indexForRectangle3;
+
+SoundFile AnimalSound;
+String[] animalSoundNames = {"dog.mp3", "pig.mp3", "cow.mp3", "bird.mp3", "cat.mp3", "elephant.mp3", "frog.mp3", "horse.mp3", "monkey.mp3", "sheep.mp3"};
+String[] animalsAvailable = {"dog", "pig", "cow", "bird", "cat", "elephant", "frog", "horse", "monkey", "sheep"};
+String[] allAnimalPictureNames = {"dog.jpg" , "pig.jpg", "cow.jpg", "bird.jpg", "cat.jpg", "elephant.jpg", "frog.jpg", "horse.jpg", "monkey.jpg", "sheep.jpg"};
+
+int[] xVal = {730, 420, 575};
+int[] yVal = {50,  50, 250};
+
+int[] threeNumbersChosen;
+String[] oneSetOfAnimalPictureNames;
+int XofCorrectArray;
+int YofCorrectArray;
+
+boolean SecondHalfOfGame = false; // list of boolean values that allow me to control the execution of key actions in the game
+boolean PlaySoundFile = true;
+boolean moveBush = false;
+boolean refreshSystem = false;
+boolean displayWellDoneImage = false;
+boolean startRefresh = false;
+boolean getRandomIntegersAgain = false;
+int count = 1;
+
+int AnimalThatHasBeenCHosen; 
+
+PImage backgroundImage; //set of images used in the game
+PImage bushImage;
+PImage wellDone;
+
+Bush bush; 
+
+int XValueOfChosenAnimal;
+int YValueOfChosenAnimal;
+
+int arrayIndexToAddChosenAnimal;
+
+int YOfWellDoneImage = 1500;
+
+void setup() {
+  size(1576, 1095);
+  
+  getThreeRandomIndexes();
+  //System.out.print(AnimalThatHasBeenCHosen);
+  stage  = 1;
+  startscreen = loadImage("startscreen.jpg");
+  image(startscreen, 0, 0, width, height);
+  
+  bush = new Bush();
+ 
+}
+
+
+
+void draw() {
+  
+  System.out.print(stage);
+  
+  
+  if(stage == 1)
+  {
+    if(mousePressed)
+    {
+      stage = 2;
+    }
+  }
+  
+  else if(stage == 2)
+  {
+    background(95,158,160);
+
+    backgroundImage = loadImage("background3.jpeg");
+    backgroundImage.resize(570*2,443*2);
+    image(backgroundImage, 140, 0);
+
+if(refreshSystem == true)
+{
+  count = count + 1;
+SecondHalfOfGame = false;
+PlaySoundFile = true;
+moveBush = false;
+refreshSystem = false;
+displayWellDoneImage = false;
+startRefresh = false;
+YOfWellDoneImage = 1500;
+
+  bush.bringBushBack();
+  
+  if(getRandomIntegersAgain == true)
+  {
+  getThreeRandomIndexes();
+  getRandomIntegersAgain = false;
+  //System.out.print(getRandomIntegersAgain);
+  }
+
+}
+
+ bush.displayBush();
+    
+ displayTheThreePictures();
+ 
+ playSoundAndShakeBush();
+ 
+ checkIfCorrect();
+ 
+ removeBushFromScreen();
+ 
+ DisplayWellDoneImageAndRefresh();
+ 
+ RefreshGame();
+  
+}
+
+}
+
+void displayImage(int iForPicture, int iForRectangle)
+  {
+    AnimalImage = loadImage(allAnimalPictureNames[iForPicture]);
+    image(AnimalImage, xVal[iForRectangle], yVal[iForRectangle]);
+  }
+ 
+  
+  ArrayList <Integer> generate3RandomIntegers() // make work
+  {
+    int number1;
+    int number2;
+    int number3;
+
+  ArrayList <Integer> list=new ArrayList<Integer>();
+  
+  while (true)
+  {
+    number1 =  (int) (Math.random() * ( 9 - 0 )) + 0;
+    list.add(number1);
+    break;
+  }
+  
+  while (true)
+  {
+    number2 =  (int) (Math.random() * ( 9 - 0 )) + 0;
+    if(!list.contains(number2))
+    {
+      list.add(number2);
+      break;
+    }
+  } 
+  
+  while (true)
+  {
+    number3 =  (int) (Math.random() * ( 9 - 0 )) + 0;
+    if(!list.contains(number3))
+    {
+      list.add(number3);
+      break;
+    }
+  }
+  
+  arrayIndexToAddChosenAnimal = (int) (Math.random() * ( 3 - 0 )) + 0;
+  AnimalThatHasBeenCHosen = list.get(arrayIndexToAddChosenAnimal);  
+  return list;
+}
+
+
+void getThreeRandomIndexes()
+{
+    ArrayList<Integer> randomNumbers=new ArrayList<Integer>();
+  randomNumbers = generate3RandomIntegers();
+
+    indexForPicture0 = randomNumbers.get(0);
+    indexForPicture1 = randomNumbers.get(1);
+    indexForPicture2 = randomNumbers.get(2);
+    if(arrayIndexToAddChosenAnimal == 0)
+    {
+      XValueOfChosenAnimal = xVal[(0)];
+  YValueOfChosenAnimal = yVal[0];
+    
+    }
+    
+    if(arrayIndexToAddChosenAnimal == 1)
+    {
+    XValueOfChosenAnimal = xVal[1];
+  YValueOfChosenAnimal = yVal[1];
+    }
+    
+    if(arrayIndexToAddChosenAnimal == 2)
+    {
+    XValueOfChosenAnimal = xVal[2];
+    YValueOfChosenAnimal = yVal[2];
+    }
+
+  
+}
+
+void displayTheThreePictures()
+{
+    displayImage(indexForPicture0, 0);
+  
+  
+  displayImage(indexForPicture1, 1);
+  
+  
+  displayImage(indexForPicture2, 2);
+
+
+}
+
+void playSoundAndShakeBush()
+{
+  
+  if(PlaySoundFile == true)
+  {
+    //System.out.print(AnimalThatHasBeenCHosen);
+    AnimalSound = new SoundFile(this, animalSoundNames[AnimalThatHasBeenCHosen]);
+    //System.out.print(AnimalThatHasBeenCHosen);
+    //System.out.print(animalSoundNames[AnimalThatHasBeenCHosen]);
+    AnimalSound.play();
+    PlaySoundFile = false;
+
+    bush.bushShake();
+
+  }
+}
+
+void checkIfCorrect()
+{
+  //System.out.print("1");
+  if(mousePressed)
+  {
+    if(mouseX>XValueOfChosenAnimal && mouseY>YValueOfChosenAnimal && mouseX<(XValueOfChosenAnimal+283) && mouseY<YValueOfChosenAnimal+177)
+    {
+      moveBush = true;
+      removeBushFromScreen();
+
+      
+    }
+    
+  }
+  
+}
+
+void DisplayWellDoneImageAndRefresh()
+{
+      if(displayWellDoneImage == true)
+      {
+       
+      YOfWellDoneImage = 500-100;
+      wellDone = loadImage("welldone.png");
+      delay(10);
+      image(wellDone, 500-100, YOfWellDoneImage);      
+      startRefresh = true;
+      displayWellDoneImage = false;
+      
+      System.out.print(startRefresh);
+  
+      }
+}
+
+void RefreshGame()
+{
+  if (startRefresh == true)
+      {
+        if(count == 10)
+        {
+          startscreen = loadImage("startscreen.jpg");
+          image(startscreen, 0, 0, width, height); 
+          stage = 1;
+        }
+        
+        else
+        {
+        refreshSystem = true;
+        getRandomIntegersAgain = true;
+        }
+      }
+}
+
+void removeBushFromScreen()
+{
+  
+  if(moveBush == true)
+  {
+    
+      if(bush.bushMove() == 0)
+      {
+      displayWellDoneImage = false;
+      }
+      
+      else 
+      {
+        displayWellDoneImage = true; 
+      }
+
+  }
+
+}
