@@ -2,34 +2,41 @@
 //this is the class that brings together objects from the other classes and manages the various events of the game and 
 responses of the game to user input
 
+
+// INITIALISE ALL THE IMPORTANT VARAIABLES
+
 import java.util.Collections;
 import processing.sound.*;
 
 PImage startscreen;
 int stage;
 
+//these store the index into each of the arrays shown below for each of the three slots displayed on the screen
 int indexForPicture0; 
+int indexForRectangle0;
 int indexForPicture1;
 int indexForRectangle1;
 int indexForPicture2;
 int indexForRectangle2;
-int indexForPicture3;
-int indexForRectangle3;
 
-SoundFile AnimalSound;
-String[] animalSoundNames = {"dog.mp3", "pig.mp3", "cow.mp3", "bird.mp3", "cat.mp3", "elephant.mp3", "frog.mp3", "horse.mp3", "monkey.mp3", "sheep.mp3"};
+SoundFile AnimalSound; //variable to play the animal noise that the user hears to select the right picture
+
+//these arrays stores the data pertaining to each animal in the game - the name, sound file name, and picture name 
 String[] animalsAvailable = {"dog", "pig", "cow", "bird", "cat", "elephant", "frog", "horse", "monkey", "sheep"};
+String[] animalSoundNames = {"dog.mp3", "pig.mp3", "cow.mp3", "bird.mp3", "cat.mp3", "elephant.mp3", "frog.mp3", "horse.mp3", "monkey.mp3", "sheep.mp3"};
 String[] allAnimalPictureNames = {"dog.jpg" , "pig.jpg", "cow.jpg", "bird.jpg", "cat.jpg", "elephant.jpg", "frog.jpg", "horse.jpg", "monkey.jpg", "sheep.jpg"};
 
+// these are the x and y values at which each of the three animals are displayed
 int[] xVal = {730, 420, 575};
 int[] yVal = {50,  50, 250};
 
+// this array stores the 3 indexes for the the three animals that will be siplayed at any one time
+// one of these indexes includes the index for the animal whose sound is played
 int[] threeNumbersChosen;
-String[] oneSetOfAnimalPictureNames;
-int XofCorrectArray;
-int YofCorrectArray;
 
-boolean SecondHalfOfGame = false; // list of boolean values that allow me to control the execution of key actions in the game
+// list of boolean values that allow me to control the execution of key actions in the game
+// they are required as this is processing constantly loops in the drawing section 
+boolean SecondHalfOfGame = false;
 boolean PlaySoundFile = true;
 boolean moveBush = false;
 boolean refreshSystem = false;
@@ -38,19 +45,24 @@ boolean startRefresh = false;
 boolean getRandomIntegersAgain = false;
 int count = 1;
 
+//variable to store the index of the animal that has been chosen
 int AnimalThatHasBeenCHosen; 
 
-PImage backgroundImage; //set of images used in the game
+//variables for the images used in the game
+PImage backgroundImage; 
 PImage bushImage;
 PImage wellDone;
 
+// Bush variable for the bush object used in the game
 Bush bush; 
+
 
 int XValueOfChosenAnimal;
 int YValueOfChosenAnimal;
 
 int arrayIndexToAddChosenAnimal;
 
+//we move the welldone image to this position when we want to remove it from the screen
 int YOfWellDoneImage = 1500;
 
 void setup() {
@@ -68,12 +80,10 @@ void setup() {
 
 
 
-void draw() {
+void draw() {  
   
-  System.out.print(stage);
-  
-  
-  if(stage == 1)
+  if(stage == 1)  //if stage is 1 we display the start screen for the game. when the mouse is clicked we change the value of 
+                  // stage to 2 and then write code for the game to execute
   {
     if(mousePressed)
     {
@@ -85,58 +95,61 @@ void draw() {
   {
     background(95,158,160);
 
-    backgroundImage = loadImage("background3.jpeg");
+    backgroundImage = loadImage("background3.jpeg"); // display the background image
     backgroundImage.resize(570*2,443*2);
     image(backgroundImage, 140, 0);
 
-if(refreshSystem == true)
-{
-  count = count + 1;
-SecondHalfOfGame = false;
-PlaySoundFile = true;
-moveBush = false;
-refreshSystem = false;
-displayWellDoneImage = false;
-startRefresh = false;
-YOfWellDoneImage = 1500;
+    if(refreshSystem == true) // if we want to refresh the game with a new animal sound and a new set of images we change all 
+                          // these variables to ensure the necessary actions are carried out to redisplay the game 
+    {
+      count = count + 1;  // we have a count. when this reaches 10 then we display the start screen again as the game is over
+      SecondHalfOfGame = false;
+      PlaySoundFile = true;
+      moveBush = false;
+      refreshSystem = false;
+      displayWellDoneImage = false;
+      startRefresh = false;
+      YOfWellDoneImage = 1500;
 
-  bush.bringBushBack();
+      bush.bringBushBack();
   
-  if(getRandomIntegersAgain == true)
-  {
-  getThreeRandomIndexes();
-  getRandomIntegersAgain = false;
-  //System.out.print(getRandomIntegersAgain);
+      if(getRandomIntegersAgain == true)
+      {
+        getThreeRandomIndexes();
+        getRandomIntegersAgain = false;
+      }
+
+    }
+
+    bush.displayBush(); // these set of functions in line 124 to 136 are the basic instructions that are carried out 
+                        // for the game to execute (look at implementation below to see what they each do)
+    
+    displayTheThreePictures();
+ 
+    playSoundAndShakeBush();
+ 
+    checkIfCorrect();
+ 
+    removeBushFromScreen();
+ 
+    DisplayWellDoneImageAndRefresh();
+ 
+    RefreshGame();
+  
   }
 
 }
 
- bush.displayBush();
-    
- displayTheThreePictures();
- 
- playSoundAndShakeBush();
- 
- checkIfCorrect();
- 
- removeBushFromScreen();
- 
- DisplayWellDoneImageAndRefresh();
- 
- RefreshGame();
-  
-}
-
-}
-
-void displayImage(int iForPicture, int iForRectangle)
+void displayImage(int iForPicture, int iForRectangle) // given position values we display the image 
   {
     AnimalImage = loadImage(allAnimalPictureNames[iForPicture]);
     image(AnimalImage, xVal[iForRectangle], yVal[iForRectangle]);
   }
  
   
-  ArrayList <Integer> generate3RandomIntegers() // make work
+  ArrayList <Integer> generate3RandomIntegers()  // we generate three unique random integers so the other three options of images 
+                                                 // are random animals. one of these selected will be the chosen image whose 
+                                                 // sound is played
   {
     int number1;
     int number2;
@@ -177,7 +190,7 @@ void displayImage(int iForPicture, int iForRectangle)
 }
 
 
-void getThreeRandomIndexes()
+void getThreeRandomIndexes() // here we get the index into the animal array lists for each of the three pictures we require
 {
     ArrayList<Integer> randomNumbers=new ArrayList<Integer>();
   randomNumbers = generate3RandomIntegers();
@@ -188,58 +201,54 @@ void getThreeRandomIndexes()
     if(arrayIndexToAddChosenAnimal == 0)
     {
       XValueOfChosenAnimal = xVal[(0)];
-  YValueOfChosenAnimal = yVal[0];
+      YValueOfChosenAnimal = yVal[0];
     
     }
     
     if(arrayIndexToAddChosenAnimal == 1)
     {
-    XValueOfChosenAnimal = xVal[1];
-  YValueOfChosenAnimal = yVal[1];
+      XValueOfChosenAnimal = xVal[1];
+      YValueOfChosenAnimal = yVal[1];
     }
     
     if(arrayIndexToAddChosenAnimal == 2)
     {
-    XValueOfChosenAnimal = xVal[2];
-    YValueOfChosenAnimal = yVal[2];
+      XValueOfChosenAnimal = xVal[2];
+      YValueOfChosenAnimal = yVal[2];
     }
 
   
 }
 
-void displayTheThreePictures()
+void displayTheThreePictures() // this function displays the three images on the screen
 {
     displayImage(indexForPicture0, 0);
   
   
-  displayImage(indexForPicture1, 1);
+    displayImage(indexForPicture1, 1);
   
   
-  displayImage(indexForPicture2, 2);
+    displayImage(indexForPicture2, 2);
 
 
 }
 
-void playSoundAndShakeBush()
+void playSoundAndShakeBush() // this plays the animal sound the user must match the picture with and shakes the bush at the
+                            // same time giving the impression the sound comes from the bush
 {
   
   if(PlaySoundFile == true)
   {
-    //System.out.print(AnimalThatHasBeenCHosen);
     AnimalSound = new SoundFile(this, animalSoundNames[AnimalThatHasBeenCHosen]);
-    //System.out.print(AnimalThatHasBeenCHosen);
-    //System.out.print(animalSoundNames[AnimalThatHasBeenCHosen]);
     AnimalSound.play();
     PlaySoundFile = false;
-
     bush.bushShake();
 
   }
 }
 
-void checkIfCorrect()
+void checkIfCorrect() // based on the position of the mouse clicks we check if the user input is correct 
 {
-  //System.out.print("1");
   if(mousePressed)
   {
     if(mouseX>XValueOfChosenAnimal && mouseY>YValueOfChosenAnimal && mouseX<(XValueOfChosenAnimal+283) && mouseY<YValueOfChosenAnimal+177)
@@ -254,7 +263,8 @@ void checkIfCorrect()
   
 }
 
-void DisplayWellDoneImageAndRefresh()
+void DisplayWellDoneImageAndRefresh() //this displays the well done image if the user input was correct and intiates the 
+                                      // the action of refreshing the game by changing startrefresh to true
 {
       if(displayWellDoneImage == true)
       {
@@ -271,7 +281,8 @@ void DisplayWellDoneImageAndRefresh()
       }
 }
 
-void RefreshGame()
+void RefreshGame() // this refreshes the entire round of the game after 10 exercises are over in the if case or it refreshes 
+                    // to another exercise if the count is less that 10
 {
   if (startRefresh == true)
       {
@@ -290,7 +301,7 @@ void RefreshGame()
       }
 }
 
-void removeBushFromScreen()
+void removeBushFromScreen() // this removes the bush from the screen and only displays the welldone image if the bush has reached the end of its downward descent
 {
   
   if(moveBush == true)
